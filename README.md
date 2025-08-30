@@ -23,7 +23,6 @@
 <hr>
 
 ## Description
-
 A robust certificate management solution that:
 - Automates wildcard SSL certificate issuance and renewal using DNS challenges
 - Integrates with Nginx Proxy Manager (NPM) for certificate management
