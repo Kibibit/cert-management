@@ -61,6 +61,17 @@ export function isExpired(expiresOn: string) {
   return Date.now() > t;
 }
 
+export function willExpireSoon(expiresOn: string, daysThreshold = 7) {
+  if (!expiresOn) return true;
+  const t = new Date(expiresOn).getTime();
+  if (Number.isNaN(t)) return true;
+  
+  const now = Date.now();
+  const threshold = now + (daysThreshold * 24 * 60 * 60 * 1000); // Convert days to milliseconds
+  
+  return t <= threshold;
+}
+
 export function ensureDir(p: string) {
   if (!fs.existsSync(p)) fs.mkdirSync(p, { recursive: true });
 }

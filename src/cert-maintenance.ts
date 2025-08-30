@@ -5,7 +5,7 @@
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { spawn } from 'child_process';
-import { ensureDir, findProjectRoot, isExpired, parseArgs, sleep, toDateString } from './utils';
+import { ensureDir, findProjectRoot, isExpired, willExpireSoon, parseArgs, sleep, toDateString } from './utils';
 import { logErr, logInfo, logOk, logStep, logWarn } from './logger';
 import { NpmService } from './npm.service';
 import { INpmCertificate } from './types';
@@ -203,7 +203,11 @@ function filterCertificatesForWildcard(wildcard: string, certs: INpmCertificate[
 }
 
 function filterValidCertificates(certs: INpmCertificate[]) {
-  return certs.filter((certificate) => !isExpired(certificate.expires_on));
+  return certs.filter((certificate) => {
+    const expired = isExpired(certificate.expires_on);
+    const expiringSoon = willExpireSoon(certificate.expires_on);
+    return !expired && !expiringSoon;
+  });
 }
 
 function getLongestValidCertificate(certs: INpmCertificate[]) {
@@ -228,7 +232,15 @@ async function ensureValidCertificate(
     return { certId: best.id, created: false };
   }
 
-  logWarn(`No valid certificate found for ${wildcard}. Starting automated renewal...`);
+  // Check if there are any certificates that are not expired but will expire soon
+  const expiringCerts = relevantCertificates.filter(cert => !isExpired(cert.expires_on) && willExpireSoon(cert.expires_on));
+  
+  if (expiringCerts.length > 0) {
+    const expiringCert = getLongestValidCertificate(expiringCerts);
+    logWarn(`Certificate for ${wildcard} will expire soon (on ${expiringCert.expires_on}). Starting preemptive renewal...`);
+  } else {
+    logWarn(`No valid certificate found for ${wildcard}. Starting automated renewal...`);
+  }
 
   if (dryRun) {
     logInfo('Dry-run: would attempt automated certificate renewal');
