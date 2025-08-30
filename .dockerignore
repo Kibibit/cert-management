@@ -1,0 +1,29 @@
+# Dependencies
+node_modules
+npm-debug.log
+
+# Build output
+dist
+
+# Git
+.git
+.gitignore
+
+# IDE
+.vscode
+.idea
+
+# Environment
+.env
+.env.*
+
+# Certificates directory (will be mounted)
+kb-certs
+
+# Docker
+Dockerfile
+.dockerignore
+
+# Other
+*.md
+*.log

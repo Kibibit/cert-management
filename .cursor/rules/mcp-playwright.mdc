@@ -1,0 +1,157 @@
+# 🎭 Playwright MCP Integration for CursorRIPER Σ
+# Symbol: Υ (Upsilon)
+# Version: 1.1.0
+
+## 📋 Service Definition
+```
+service = "Playwright Automation Operations"
+symbol = "Υ"
+requires = "playwright (via MCP Proxy)"
+```
+
+## 🔧 Operation Mapping
+```
+Υ_ops = {
+  browser: {
+    launch: "browser_navigate",
+    close: "browser_close",
+    screenshot: "browser_take_screenshot"
+  },
+  page: {
+    navigate: "browser_navigate",
+    click: "browser_click",
+    type: "browser_type",
+    select: "browser_select_option",
+    hover: "browser_hover",
+    evaluate: "browser_evaluate",
+    upload: "browser_file_upload",
+    wait_for: "browser_wait_for"
+  },
+  test: {
+    record: "start_codegen_session",
+    end_record: "end_codegen_session",
+    assert: "playwright_expect_response + playwright_assert_response"
+  },
+  scrape: {
+    content: "browser_snapshot",
+    html: "browser_take_screenshot",
+    network: "browser_network_requests"
+  }
+}
+```
+
+## 🔒 Mode Restrictions
+```
+MΥ = {
+  Ω₁: [scrape_*, screenshot],                    # RESEARCH: data gathering
+  Ω₂: [navigate, screenshot, scrape_*],          # INNOVATE: exploration
+  Ω₃: [all_ops],                                # PLAN: all operations
+  Ω₄: [test_*, navigate, click, type, assert],   # EXECUTE: testing focus
+  Ω₅: [screenshot, scrape_*, network]            # REVIEW: verification
+}
+```
+
+## 🔑 Permission Matrix
+```
+ℙΥ = {
+  create: [Ω₃, Ω₄],          # PLAN/EXECUTE can create tests
+  read: [Ω₁, Ω₂, Ω₃, Ω₄, Ω₅], # All can read page content
+  update: [Ω₃, Ω₄],          # PLAN/EXECUTE can interact
+  delete: []                 # No delete operations
+}
+```
+
+## 📍 Context Integration
+```
+Γ_browser = {
+  active_session: browser_instance,
+  current_url: page.url(),
+  test_recordings: codegen_sessions[],
+  console_logs: captured_logs[],
+  screenshots: saved_screenshots[]
+}
+```
+
+## ⚡ Command Shortcuts
+```
+SΥ = {
+  !pn: "navigate to URL",
+  !ps: "take screenshot",
+  !pc: "click element",
+  !pf: "type text",
+  !pt: "start test recording",
+  !pe: "end test recording",
+  !pg: "get page content"
+}
+```
+
+## 🛡️ Protection Levels
+```
+ΨΥ = {
+  navigate: Ψ₂,        # GUARDED - URL changes
+  click: Ψ₃,           # INFO - user actions
+  type: Ψ₂,            # GUARDED - form data
+  test_record: Ψ₅,     # TEST - test recording
+  evaluate: Ψ₆         # CRITICAL - code execution
+}
+```
+
+## 🔄 Mode-Specific Behaviors
+```
+apply_browser_op(op, mode) = {
+  check: op ∈ MΥ[mode] ? proceed : deny("Operation not allowed in " + mode),
+  protect: op ∈ ΨΥ ? apply_protection(ΨΥ[op]) : continue,
+  track: {
+    log_action(op, selector, value),
+    capture_state(screenshot_if_needed)
+  },
+  execute: Υ_ops[category][operation]()
+}
+```
+
+## 🎯 Testing Integration
+```
+test_workflow = {
+  start: {
+    mode: require(Ω₃ ∨ Ω₄),
+    init: start_codegen_session({
+      outputPath: "./tests/",
+      includeComments: true
+    })
+  },
+  record: {
+    actions: [navigate, click, type, assert],
+    capture: automatic_via_codegen
+  },
+  end: {
+    generate: end_codegen_session(sessionId),
+    output: test_file_with_playwright_code
+  }
+}
+```
+
+## 📸 Screenshot Management
+```
+screenshot_policy = {
+  Ω₁: "on_demand",
+  Ω₂: "key_pages",
+  Ω₃: "all_interactions", 
+  Ω₄: "test_failures",
+  Ω₅: "final_state"
+}
+```
+
+## 🔌 Feature Detection
+```
+detect_browser_automation() = {
+  playwright_proxy_tools: tools.find("browser_navigate")
+    ∧ tools.find("browser_click"),
+  fallback: warn("Playwright MCP via proxy not available")
+}
+```
+
+## 🔗 Integration Notes
+```
+Preferred workflow: author tests with Playwright, validate locally/CI, and use your standard Git workflow (e.g., gh CLI) for commits/PRs.
+```
+
