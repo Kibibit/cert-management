@@ -25,5 +25,7 @@ Dockerfile
 .dockerignore
 
 # Other
-*.md
 *.log
+# Include README.md but ignore other md files
+!README.md
+*.md
