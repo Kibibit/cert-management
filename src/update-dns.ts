@@ -15,7 +15,7 @@ async function updateDNSChallenge(options: IUpdateDNSOptions) {
 
   // Launch browser
   const browser = await chromium.launch({
-    headless: options.debug ?? false
+    headless: !options.debug
   });
 
   try {
